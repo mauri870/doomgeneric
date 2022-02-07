@@ -20,7 +20,7 @@ void DG_DrawFrame()
 
 void DG_SleepMs(uint32_t ms)
 {
-  printf("DG_SleepMs\n");
+  sleep(ms);
 }
 
 uint32_t DG_GetTicksMs()
