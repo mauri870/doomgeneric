@@ -1,0 +1,22 @@
+</$objtype/mkfile
+
+OBJ=i_main.$O dummy.$O am_map.$O doomdef.$O doomstat.$O dstrings.$O d_event.$O d_items.$O d_iwad.$O d_loop.$O d_main.$O d_mode.$O d_net.$O f_finale.$O f_wipe.$O g_game.$O hu_lib.$O hu_stuff.$O info.$O i_cdmus.$O i_endoom.$O i_joystick.$O i_scale.$O i_sound.$O i_system.$O i_timer.$O memio.$O m_argv.$O m_bbox.$O m_cheat.$O m_config.$O m_controls.$O m_fixed.$O m_menu.$O m_misc.$O m_random.$O p_ceilng.$O p_doors.$O p_enemy.$O p_floor.$O p_inter.$O p_lights.$O p_map.$O p_maputl.$O p_mobj.$O p_plats.$O p_pspr.$O p_saveg.$O p_setup.$O p_sight.$O p_spec.$O p_switch.$O p_telept.$O p_tick.$O p_user.$O r_bsp.$O r_data.$O r_draw.$O r_main.$O r_plane.$O r_segs.$O r_sky.$O r_things.$O sha1.$O sounds.$O statdump.$O st_lib.$O st_stuff.$O s_sound.$O tables.$O v_video.$O wi_stuff.$O w_checksum.$O w_file.$O w_main.$O w_wad.$O z_zone.$O w_file_stdc.$O i_input.$O i_video.$O doomgeneric.$O doomgeneric_plan9.$O
+
+CC=cc
+LD=cc
+CFLAGS=-D_POSIX_SOURCE -D_BSD_EXTENSION -D_LIBG_EXTENSION -D_LIMITS_EXTENSION -D_PLAN9_EXTENSION -D_PLAN9_SOURCE
+
+$O.out: $OBJ
+	$LD $OBJ -o $O.out
+
+install: $O.out
+	cp $O.out /$objtype/bin/games
+
+%.$O:   %.c
+	$CC $CFLAGS -c $stem.c -o $stem.$O
+
+uninstall:V:
+	rm $BIN/$TARG || echo
+
+clean:V:
+	rm -f [$OS].out *.[$OS] y.tab.?
