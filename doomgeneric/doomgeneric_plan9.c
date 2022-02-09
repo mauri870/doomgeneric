@@ -101,20 +101,44 @@ void writePixel(Image *dst, Point p, int color) {
 }
 
 void redraw() {
+  Rectangle r;
+  Image *frame;
+  uchar *buf;
+  uchar *d;
+  int bufsiz;
+
+	/* Back buffer */
+  r = Rect(0, 0, DOOMGENERIC_RESX, DOOMGENERIC_RESY);
+	frame = allocimage(display, screen->r, screen->chan, RGBA32, DBlack);
+	if(frame == nil)
+		sysfatal("redraw frame allocimage: %r");
+
   for (int r = 0; r < DOOMGENERIC_RESY; ++r)
   {
       for (int c = 0; c < DOOMGENERIC_RESX; ++c)
       {
-          unsigned int pixel = DG_ScreenBuffer[r * DOOMGENERIC_RESX + c];
-          writePixel(screen, Pt(c, r), pixel);
+          unsigned int color = DG_ScreenBuffer[r * DOOMGENERIC_RESX + c];
+          writePixel(frame, Pt(c, r), color);
       }
   }
+  
+  /* raw memory for the load/unload */
+	bufsiz = bytesperline(frame->r, frame->depth) * Dy(frame->r);
+	buf = malloc(bufsiz);
 
+  /* move back buffer to front buffer */
+	unloadimage(frame, frame->r, buf, bufsiz);
+	loadimage(screen, frame->r, buf, bufsiz);
+	
+	flushimage(display, 1);
+	free(buf);
+	freeimage(frame);
 }
 
 void eresized(int new) {
 	if (new && getwindow(display, Refnone) < 0)
 		sysfatal("can't reattach to window");
+  draw(screen, screen->r, display->black, nil, ZP);
   redraw();
 } 
 
@@ -123,8 +147,6 @@ void DG_Init(){
 
   if (initdraw(nil, nil, "DOOM") < 0)
 	  sysfatal("initdraw failed: %r");
-
-  draw(screen, screen->r, display->black, nil, ZP);
 
   // TODO: uncomment this when the texture loading works otherwise
   // it hangs the rio window.
