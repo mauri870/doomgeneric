@@ -31,7 +31,7 @@
 #define strncasecmp _strnicmp
 
 #else
-    #ifndef PLAN9
+    #ifndef _PLAN9_SOURCE
         #include <strings.h>
     #endif
 #endif

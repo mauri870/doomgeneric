@@ -1758,7 +1758,7 @@ void D_DoomMain (void)
     DEH_printf("M_Init: Init miscellaneous info.\n");
     M_Init ();
 
-    DEH_printf("R_Init: Init DOOM refresh daemon - ");
+    DEH_printf("R_Init: Init DOOM refresh daemon.\n");
     R_Init ();
 
     DEH_printf("\nP_Init: Init Playloop state.\n");
