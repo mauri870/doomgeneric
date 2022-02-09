@@ -25,7 +25,7 @@ static unsigned short s_KeyQueue[KEYQUEUE_SIZE];
 static unsigned int s_KeyQueueWriteIndex = 0;
 static unsigned int s_KeyQueueReadIndex = 0;
 
-static unsigned int convertToDoomKey(unsigned int key)
+unsigned short convertToDoomKey(int key)
 {
     switch (key) {
     case '\n':
@@ -59,18 +59,19 @@ static unsigned int convertToDoomKey(unsigned int key)
         key = KEY_RALT;
         break;
     default:
-        key = tolower(key);
-        break;
+      if (key < 0x80)
+          key = tolower(key);
+      break;
     }
 
     return key;
 }
 
-static void addKeyToQueue(unsigned int keyCode)
+static void addKeyToQueue(int keyCode)
 {
     // TODO: is there a way to check if pressed in Plan9?
     bool pressed = true;
-    unsigned int key = convertToDoomKey(key);
+    unsigned short key = convertToDoomKey(keyCode);
 
     unsigned short keyData = (pressed << 8) | key;
 
