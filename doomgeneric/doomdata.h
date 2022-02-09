@@ -52,6 +52,9 @@ enum
   ML_BLOCKMAP		// LUT, motion clipping, walls/grid element
 };
 
+#ifdef _PLAN9_SOURCE
+    #pragma pack on
+#endif
 
 // A single Vertex.
 typedef struct
@@ -89,6 +92,9 @@ typedef struct
   short		sidenum[2];		
 } PACKEDATTR maplinedef_t;
 
+#ifdef _PLAN9_SOURCE
+    #pragma pack off
+#endif
 
 //
 // LineDef attributes.
@@ -133,6 +139,9 @@ typedef struct
 
 
 
+#ifdef _PLAN9_SOURCE
+    #pragma pack on
+#endif
 
 // Sector definition, from editing.
 typedef	struct
@@ -206,7 +215,9 @@ typedef struct
     short		options;
 } PACKEDATTR mapthing_t;
 
-
+#ifdef _PLAN9_SOURCE
+    #pragma pack off
+#endif
 
 
 

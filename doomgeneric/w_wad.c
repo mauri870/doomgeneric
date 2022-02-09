@@ -36,6 +36,10 @@
 
 #include "w_wad.h"
 
+#ifdef _PLAN9_SOURCE
+    #pragma pack on
+#endif
+
 typedef struct
 {
     // Should be "IWAD" or "PWAD".
@@ -51,6 +55,10 @@ typedef struct
     int			size;
     char		name[8];
 } PACKEDATTR filelump_t;
+
+#ifdef _PLAN9_SOURCE
+    #pragma pack off
+#endif
 
 //
 // GLOBALS

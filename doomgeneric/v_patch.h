@@ -20,6 +20,10 @@
 #ifndef V_PATCH_H
 #define V_PATCH_H
 
+#ifdef _PLAN9_SOURCE
+    #pragma pack on
+#endif
+
 // Patches.
 // A patch holds one or more columns.
 // Patches are used for sprites and all masked pictures,
@@ -42,6 +46,10 @@ typedef struct
     byte		topdelta;	// -1 is the last post in a column
     byte		length; 	// length data bytes follows
 } PACKEDATTR post_t;
+
+#ifdef _PLAN9_SOURCE
+    #pragma pack off
+#endif
 
 // column_t is a list of 0 or more post_t, (byte)-1 terminated
 typedef post_t	column_t;

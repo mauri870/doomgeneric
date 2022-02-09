@@ -615,6 +615,10 @@ void V_RestoreBuffer(void)
     dest_screen = I_VideoBuffer;
 }
 
+#ifdef _PLAN9_SOURCE
+    #pragma pack on
+#endif
+
 //
 // SCREEN SHOTS
 //
@@ -645,6 +649,9 @@ typedef struct
     unsigned char	data;		// unbounded
 } PACKEDATTR pcx_t;
 
+#ifdef _PLAN9_SOURCE
+    #pragma pack off
+#endif
 
 //
 // WritePCXfile
