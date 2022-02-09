@@ -80,12 +80,14 @@ static void addKeyToQueue(int keyCode)
     s_KeyQueueWriteIndex %= KEYQUEUE_SIZE;
 }
 
-void writePixel(Image *dst, Point p, int color) {
+void writePixel(Image *dst, int x, int y, int color) {
 	Rectangle r;
 
 	r = dst->r;
-	r.min = addpt(r.min, p);
-	r.max = addpt(r.min, Pt(1, 1));
+  r.min.x += x;
+  r.min.y += y;
+  r.max.x = r.min.x + 1;
+  r.max.y = r.min.y + 1;
 
   uchar alpha = (color >> 24) & 0xff;
   uchar red = (color >> 16) & 0xFF;
@@ -101,14 +103,12 @@ void writePixel(Image *dst, Point p, int color) {
 }
 
 void redraw() {
-  Rectangle r;
   Image *frame;
   uchar *buf;
   uchar *d;
   int bufsiz;
 
 	/* Back buffer */
-  r = Rect(0, 0, DOOMGENERIC_RESX, DOOMGENERIC_RESY);
 	frame = allocimage(display, screen->r, screen->chan, RGBA32, DBlack);
 	if(frame == nil)
 		sysfatal("redraw frame allocimage: %r");
@@ -118,7 +118,7 @@ void redraw() {
       for (int c = 0; c < DOOMGENERIC_RESX; ++c)
       {
           unsigned int color = DG_ScreenBuffer[r * DOOMGENERIC_RESX + c];
-          writePixel(frame, Pt(c, r), color);
+          writePixel(frame, c, r, color);
       }
   }
   
