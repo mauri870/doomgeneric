@@ -46,7 +46,9 @@
 // a patch or sprite is composed of zero or more columns.
 // 
 
-
+#ifdef _PLAN9_SOURCE
+    #pragma pack on
+#endif
 
 //
 // Texture definition.
@@ -82,6 +84,9 @@ typedef struct
     mappatch_t	patches[1];
 } PACKEDATTR maptexture_t;
 
+#ifdef _PLAN9_SOURCE
+    #pragma pack off
+#endif
 
 // A single patch from a texture definition,
 //  basically a rectangular area within
