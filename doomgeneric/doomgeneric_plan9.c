@@ -86,16 +86,20 @@ void writePixel(Image *dst, Point p, int color) {
 	r.min = addpt(r.min, p);
 	r.max = addpt(r.min, Pt(1, 1));
 
-	// FIXME: This assumes color to be 24 bit RGB
-	uchar bits[4];
-	bits[2] = color >> 24;
-	bits[1] = color >> 16;
-	bits[0] = color >> 8;
-	loadimage(dst, r, bits, sizeof bits);
+  uchar alpha = (color >> 24) & 0xff;
+  uchar red = (color >> 16) & 0xFF;
+  uchar green = (color >> 8) & 0xFF;
+  uchar blue = (color) & 0xFF;
+
+  uchar bits[4];
+  bits[3] = alpha;
+  bits[2] = red;
+  bits[1] = green;
+  bits[0] = blue;
+  loadimage(dst, r, bits, sizeof bits);
 }
 
 void redraw() {
-  // TODO: fillcolor with DTransparent
   for (int r = 0; r < DOOMGENERIC_RESY; ++r)
   {
       for (int c = 0; c < DOOMGENERIC_RESX; ++c)
@@ -119,15 +123,16 @@ void DG_Init(){
   if (initdraw(nil, nil, "DOOM") < 0)
 	  sysfatal("initdraw failed: %r");
 
+  draw(screen, screen->r, display->black, nil, ZP);
+
   // TODO: uncomment this when the texture loading works otherwise
   // it hangs the rio window.
-  // einit(Emouse|Ekeyboard);
-
+  einit(Emouse|Ekeyboard);
   eresized(0);
 }
 
 void maybeReadEvents() {
-  if (!ecankbd() && !ecanmouse())
+  if (!ecanread(Ekeyboard|Emouse))
     return;
 
   Event ev;
@@ -147,7 +152,6 @@ void DG_DrawFrame()
 {
   maybeReadEvents();
   redraw();
-  printf("DG_DrawFrame\n");
 }
 
 void DG_SleepMs(uint32_t ms)
@@ -185,5 +189,5 @@ int DG_GetKey(int* pressed, unsigned char* doomKey)
 
 void DG_SetWindowTitle(const char * title)
 {
-  printf("unimplemented! DG_SetWindowTitle");
+  (void) title;
 }
