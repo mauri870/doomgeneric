@@ -1,4 +1,4 @@
-//doomgeneric for soso os
+//doomgeneric for SDL3
 
 #include "doomkeys.h"
 #include "m_argv.h"
@@ -9,7 +9,7 @@
 #include <ctype.h>
 
 #include <stdbool.h>
-#include <SDL.h>
+#include <SDL3/SDL.h>
 
 SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
@@ -25,21 +25,27 @@ static unsigned char convertToDoomKey(unsigned int key){
   switch (key)
     {
     case SDLK_RETURN:
+    case SDLK_E:
       key = KEY_ENTER;
       break;
     case SDLK_ESCAPE:
+    case SDLK_Q:
       key = KEY_ESCAPE;
       break;
     case SDLK_LEFT:
+    case SDLK_A:
       key = KEY_LEFTARROW;
       break;
     case SDLK_RIGHT:
+    case SDLK_D:
       key = KEY_RIGHTARROW;
       break;
     case SDLK_UP:
+    case SDLK_W:
       key = KEY_UPARROW;
       break;
     case SDLK_DOWN:
+    case SDLK_S:
       key = KEY_DOWNARROW;
       break;
     case SDLK_LCTRL:
@@ -73,41 +79,38 @@ static void addKeyToQueue(int pressed, unsigned int keyCode){
 static void handleKeyInput(){
   SDL_Event e;
   while (SDL_PollEvent(&e)){
-    if (e.type == SDL_QUIT){
+    if (e.type == SDL_EVENT_QUIT){
       puts("Quit requested");
       atexit(SDL_Quit);
       exit(1);
     }
-    if (e.type == SDL_KEYDOWN) {
+    if (e.type == SDL_EVENT_KEY_DOWN) {
       //KeySym sym = XKeycodeToKeysym(s_Display, e.xkey.keycode, 0);
       //printf("KeyPress:%d sym:%d\n", e.xkey.keycode, sym);
-      addKeyToQueue(1, e.key.keysym.sym);
-    } else if (e.type == SDL_KEYUP) {
+      addKeyToQueue(1, e.key.key);
+    } else if (e.type == SDL_EVENT_KEY_UP) {
       //KeySym sym = XKeycodeToKeysym(s_Display, e.xkey.keycode, 0);
       //printf("KeyRelease:%d sym:%d\n", e.xkey.keycode, sym);
-      addKeyToQueue(0, e.key.keysym.sym);
+      addKeyToQueue(0, e.key.key);
     }
   }
 }
 
 
 void DG_Init(){
-  window = SDL_CreateWindow("DOOM",
-                            SDL_WINDOWPOS_UNDEFINED,
-                            SDL_WINDOWPOS_UNDEFINED,
-                            DOOMGENERIC_RESX,
-                            DOOMGENERIC_RESY,
-                            SDL_WINDOW_SHOWN
+  SDL_CreateWindowAndRenderer("DOOM",
+                              DOOMGENERIC_RESX,
+                              DOOMGENERIC_RESY,
+                              0,
+                              &window,
+                              &renderer
                             );
-
-  // Setup renderer
-  renderer =  SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED);
-  // Clear winow
+  // Clear window
   SDL_RenderClear( renderer );
   // Render the rect to the screen
   SDL_RenderPresent(renderer);
 
-  texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_TARGET, DOOMGENERIC_RESX, DOOMGENERIC_RESY);
+  texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_XRGB8888, SDL_TEXTUREACCESS_TARGET, DOOMGENERIC_RESX, DOOMGENERIC_RESY);
 }
 
 void DG_DrawFrame()
@@ -115,7 +118,7 @@ void DG_DrawFrame()
   SDL_UpdateTexture(texture, NULL, DG_ScreenBuffer, DOOMGENERIC_RESX*sizeof(uint32_t));
 
   SDL_RenderClear(renderer);
-  SDL_RenderCopy(renderer, texture, NULL, NULL);
+  SDL_RenderTexture(renderer, texture, NULL, NULL);
   SDL_RenderPresent(renderer);
 
   handleKeyInput();
