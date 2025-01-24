@@ -18,7 +18,7 @@ SDL_LIBS =
 
 CC=clang  # gcc or g++
 CFLAGS+=-ggdb3 -Os $(INCLUDES) $(SDL_CFLAGS)
-LDFLAGS+=-Wl,-dead_strip
+LDFLAGS+=-Wl
 CFLAGS+=-ggdb3 -Wall -DNORMALUNIX -DLINUX -DSNDSERV # -DUSEASM
 LIBS+=-lm -lc -lSDL2
 
